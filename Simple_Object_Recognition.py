@@ -73,7 +73,7 @@ model = tf.keras.models.Sequential([tf.keras.layers.Conv2D(32,(3,3), activation=
 # model.compile(loss='sparse_categorical_crossentropy', optimizer=tf.optimizers.SGD(momentum=0.5, decay=0.0004), metrics=['accuracy'])
 model.compile(loss='sparse_categorical_crossentropy', optimizer=tf.optimizers.Adam(), metrics=['accuracy'])
 
-cnn = model.fit(imageTrain, classTrain, epochs=10, callbacks=[callbacks])
+cnn = model.fit(imageTrain, classTrain, epochs=5, validation_data=(imageTest,classTest), callbacks=[callbacks])
 model.evaluate(imageTest, classTest) # testing the accuracy on the test set
 
 yTest = model.predict(imageTest) #predicting all the testing images and storing in yTest
@@ -85,12 +85,26 @@ print(yClass[:5])
 print(classTest[:5])
 
 #Change the index for another example
-plot_sample(imageTest, classTest, 0) #plot the actual sample and the name of it
-print("The predicted value is: ", classes[yClass[0]]) #the predicted value
+plot_sample(imageTest, classTest, 5) #plot the actual sample and the name of it
+print("The predicted value is: ", classes[yClass[5]]) #the predicted value
 
-# plt.close('all')
+
+#Summarize history for loss
 plt.figure()
+plt.title('Model Loss')
+plt.plot(cnn.history['loss'])
+plt.plot(cnn.history['val_loss'])
+plt.ylabel('loss')
+plt.xlabel('epochs')
+plt.legend(['train','validation'], loc='upper left')
+plt.show()
+
+#Summarize history for accuracy
+plt.figure()
+plt.title('Model Accuracy')
 plt.plot(cnn.history['accuracy'])
+plt.plot(cnn.history['val_accuracy'])
 plt.ylabel('accuracy')
 plt.xlabel('epochs')
+plt.legend(['train','validation'], loc='upper left')
 plt.show()
